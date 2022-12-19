@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import ReactPaginate from 'react-paginate';
 import './App.css';
 
+const PER_PAGE = 10;
 
 function App() {
   const [cityData, setCityData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   async function getData() {
     const response = await fetch('https://datahub.io/core/world-cities/r/world-cities.json');
@@ -14,6 +17,25 @@ function App() {
   useEffect(() => {
     getData();
   }, []);
+
+  function handlePageClick({ selected: selectedPage }) {
+    setCurrentPage(selectedPage);
+  }
+
+  const offset = currentPage * PER_PAGE;
+
+  const currentPageData = cityData
+    .slice(offset, offset + PER_PAGE)
+    .map(city => <React.Fragment key={city.geonameid}>
+        <tr>
+          <td>{city.name}</td>
+          <td>{city.country}</td>
+          <td>{city.subcountry}</td>
+          <td>{city.geonameid}</td>
+        </tr>
+    </React.Fragment>);
+
+  const pageCount = Math.ceil(cityData.length / PER_PAGE); 
 
   return (
     <div >
@@ -31,18 +53,20 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {cityData.map((city) => {           
-              return (
-                <tr>
-                  <td>{city.name}</td>
-                  <td>{city.country}</td>
-                  <td>{city.subcountry}</td>
-                  <td>{city.geonameid}</td>
-                </tr>
-              )})
-            }
+            {currentPageData}
           </tbody>
         </table>
+        <ReactPaginate
+        previousLabel={"← Previous"}
+        nextLabel={"Next →"}
+        pageCount={pageCount}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        previousLinkClassName={"pagination__link"}
+        nextLinkClassName={"pagination__link"}
+        disabledClassName={"pagination__link--disabled"}
+        activeClassName={"pagination__link--active"}
+      />
       </div>
     </div>
   );
