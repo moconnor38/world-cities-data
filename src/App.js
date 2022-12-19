@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import './App.css';
 import Spinner from './components/Spinner';
+import TextColumn from './components/TextColumn';
+import Table from './components/Table';
 
 const PER_PAGE = 10;
 
@@ -22,7 +24,7 @@ function App() {
   }, []);
   
   if (isLoading) {
-    return <Spinner message="Getting city data..." />;
+    return <Spinner message='Getting city data...' />;
   }
 
   function handlePageClick({ selected: selectedPage }) {
@@ -31,62 +33,38 @@ function App() {
 
   const offset = currentPage * PER_PAGE;
 
-  const currentPageData = cityData
-    .slice(offset, offset + PER_PAGE)
-    .map(city => <React.Fragment key={city.geonameid}>
-        <tr>
-          <td>{city.name}</td>
-          <td>{city.country}</td>
-          <td>{city.subcountry}</td>
-          <td>{city.geonameid}</td>
-        </tr>
-    </React.Fragment>);
+  const currentPageData = cityData.slice(offset, offset + PER_PAGE)
 
   const pageCount = Math.ceil(cityData.length / PER_PAGE); 
 
   return (
     <div className='ui grid'>
       <div className='eight wide column'>
-      <div>
-        <h1>World Cities</h1>
-      </div>
-      <div className='ui container'>
-        <table className='ui green table'>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Country</th>
-              <th>Subcountry</th>
-              <th>Geonameid</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPageData}
-          </tbody>
-        </table>
-        <div className='ui container'>      
-          <ReactPaginate
-            previousLabel={"← Previous"}
-            nextLabel={"Next →"}
-            pageCount={pageCount}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            previousLinkClassName={"pagination__link"}
-            nextLinkClassName={"pagination__link"}
-            disabledClassName={"pagination__link--disabled"}
-            activeClassName={"active"}
-          />
+        <div>
+          <h1>World Cities</h1>
         </div>
-      </div>
+        <div className='ui container'>
+          <Table cities={currentPageData}/>
+          <div className='ui container'>      
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              pageCount={pageCount}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
+          </div>
+        </div>
       </div>
         <div className='eight wide column'>
-          <div>
-            <h1>Dummy Text</h1>
-          </div>
-          <div className='ui container'>
-            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-          </div>
+          <div className="ui container">
+            <div>
+              <h1>Some Text</h1>
+            </div>
+            <TextColumn />
         </div>
+      </div>
     </div>
   );
 }
