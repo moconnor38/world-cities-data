@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+
 import './App.css';
 import Spinner from './components/Spinner';
-import TextColumn from './components/TextColumn';
+import Text from './components/Text';
 import Table from './components/Table';
 
 const PER_PAGE = 10;
@@ -11,12 +12,13 @@ function App() {
   const [cityData, setCityData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  
+
+  // TODO: Error handling
   async function getData() {
-    const response = await fetch('https://datahub.io/core/world-cities/r/world-cities.json');
-    const data = await response.json();
-    setIsLoading(false);
-    setCityData(data);
+      const response = await fetch('https://datahub.io/core/world-cities/r/world-cities.json');
+      const data = await response.json();
+      setCityData(data);
+      setIsLoading(false);
   }
   
   useEffect(() => {
@@ -62,7 +64,7 @@ function App() {
             <div>
               <h1>Some Text</h1>
             </div>
-            <TextColumn />
+            <Text numberOfParagraphs={10}/>
         </div>
       </div>
     </div>
